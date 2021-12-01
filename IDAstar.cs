@@ -179,12 +179,25 @@ namespace IdaStar
 					if (!neighbour.IsInsideBox(_board.Count, _board[0].Count)) {
 						continue;
 					}
+                    if (_board[neighbour.Row][neighbour.Column] == CellState.OBSTACLE) {
+						continue;
+					}
+
+                    if (_board[neighbour.Row][neighbour.Column] == CellState.EMPTY) {
+						_board[neighbour.Row][neighbour.Column] = CellState.PATH;
+					}
+					AlgorithmStep?.Invoke(this);
 					var neighbourF = search(neighbour, cost + increment, threshold);
+
                     if (neighbourF < min) {
 						min = neighbourF;
 					}
                     if (min == zero) {
 						break;
+					}
+
+					if (_board[neighbour.Row][neighbour.Column] == CellState.PATH) {
+						_board[neighbour.Row][neighbour.Column] = CellState.EMPTY;
 					}
 				}
 
