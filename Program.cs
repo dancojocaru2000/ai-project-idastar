@@ -1,6 +1,6 @@
 ﻿using IdaStar;
 
-string[] labyrinthIN = System.IO.File.ReadAllLines(@"C:\UNI\AI\IDAstar\labyrinthOUT.txt");
+string[] labyrinthIN = System.IO.File.ReadAllLines(@"C:\UNI\AI\IDAstar\labyrinth.txt");
 
 
 System.Console.WriteLine("The input labyrinth: ");
@@ -19,17 +19,18 @@ algoBoard.AlgorithmStep += (_) => {
     if(done){
         System.Console.WriteLine("The solved labyrinth is:");
     }else if(step/2 == 0) {
-        System.Console.WriteLine("Computing [• ]");
+        System.Console.WriteLine("Computing [· ]");
     }else {
-        System.Console.WriteLine("Computing [ •]");
+        System.Console.WriteLine("Computing [ ·]");
     }
 
     //top border
     Console.BackgroundColor = border;
     for (var i=0; i<algoBoard.Board[0].Count()+2; i++){
-        Console.Write("==="); 
+        Console.Write("   "); 
     }
     Console.ResetColor();
+    Console.WriteLine();
 
     foreach (var line in algoBoard.Board)
     {
@@ -38,7 +39,7 @@ algoBoard.AlgorithmStep += (_) => {
 
         //left border
         Console.BackgroundColor = border;
-        Console.Write("|||"); 
+        Console.Write("   "); 
         Console.ResetColor();
 
         //labyrinth line
@@ -46,16 +47,19 @@ algoBoard.AlgorithmStep += (_) => {
 
         //right border
         Console.BackgroundColor = border;
-        Console.Write("|||"); 
+        Console.Write("   "); 
         Console.ResetColor();
+
+        Console.WriteLine();
     }
 
     //bottom border
     Console.BackgroundColor = border;
     for (var i=0; i<algoBoard.Board[0].Count()+2; i++){
-        Console.Write("==="); 
+        Console.Write("   "); 
     }
     Console.ResetColor();
+    Console.WriteLine();
 };
 
 algoBoard.RunIdaStar();
@@ -79,7 +83,7 @@ void FormattedLabRow(string line) {
 
             case 'S': {
                 Console.BackgroundColor = ConsoleColor.Green;
-                Console.Write("<•>"); 
+                Console.Write("<·>"); 
                 break;
             }
 
@@ -91,7 +95,7 @@ void FormattedLabRow(string line) {
 
             case 'p': {
                 Console.BackgroundColor = ConsoleColor.Blue;
-                Console.Write(" • "); 
+                Console.Write(" · "); 
                 break;
             }
 
@@ -99,5 +103,4 @@ void FormattedLabRow(string line) {
         }
     }
     Console.ResetColor();
-    Console.WriteLine();
 }
