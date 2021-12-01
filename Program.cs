@@ -1,4 +1,4 @@
-using IdaStar;
+﻿using IdaStar;
 
 string[] labyrinthIN = System.IO.File.ReadAllLines(@"./labyrinth.txt");
 
@@ -61,6 +61,7 @@ algoBoard.AlgorithmStep += (_) => {
     }
     Console.ResetColor();
     Console.WriteLine();
+	Thread.Sleep(200);
 };
 
 algoBoard.RunIdaStar();
