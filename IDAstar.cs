@@ -124,7 +124,7 @@ namespace IdaStar
 			get => _board.Select((row) => row.AsReadOnly()).ToList().AsReadOnly();
 		}
 
-		public event Action<WorkingBoard>? AlgorithmStep;
+		public event Action<WorkingBoard, int>? AlgorithmStep;
 
         /// <summary>
 		/// Clean board, making it ready for a new run.
@@ -141,8 +141,8 @@ namespace IdaStar
 			}
         }
 
-		public void RunIdaStar() => RunIdaStar(0, 1, (p1, p2) => p1.ManhattanDistance(p2));
-		public void RunIdaStar<Num>(Num zero, Num increment, Func<Point, Point, Num> heuristic) where Num: INumber<Num> {
+		public void RunIdaStar() => RunIdaStar((p1, p2) => p1.ManhattanDistance(p2));
+		public void RunIdaStar(Func<Point, Point, int> heuristic) {
 			// Don't run algorithm on a "dirty" board
 			// "dirty" = the algorithm was already ran before
 			if (_board.Select((row) => row.Where((state) => state == CellState.PATH).Count()).Any((cnt) => cnt > 0)) {
@@ -164,9 +164,9 @@ namespace IdaStar
 
 			Point destinationPoint = findPoint(CellState.DESTINATION);
 
-            Num search(Point current, Num cost, Num threshold) {
+            int search(Point current, int cost, int threshold) {
 				var h = heuristic(current, destinationPoint);
-                if (h == zero) {
+                if (h == 0) {
 					return h;
 				}
 				var f = cost + h;
@@ -179,34 +179,44 @@ namespace IdaStar
 					if (!neighbour.IsInsideBox(_board.Count, _board[0].Count)) {
 						continue;
 					}
-                    if (_board[neighbour.Row][neighbour.Column] == CellState.OBSTACLE) {
+                    if (_board[neighbour.Row][neighbour.Column] == CellState.OBSTACLE ||
+						_board[neighbour.Row][neighbour.Column] == CellState.PATH) {
 						continue;
 					}
 
                     if (_board[neighbour.Row][neighbour.Column] == CellState.EMPTY) {
 						_board[neighbour.Row][neighbour.Column] = CellState.PATH;
 					}
-					AlgorithmStep?.Invoke(this);
-					var neighbourF = search(neighbour, cost + increment, threshold);
+					AlgorithmStep?.Invoke(this, threshold);
+					var neighbourF = search(neighbour, cost + 1, threshold);
 
                     if (neighbourF < min) {
 						min = neighbourF;
 					}
-                    if (min == zero) {
+                    if (min == 0) {
 						break;
 					}
 
 					if (_board[neighbour.Row][neighbour.Column] == CellState.PATH) {
 						_board[neighbour.Row][neighbour.Column] = CellState.EMPTY;
 					}
+					AlgorithmStep?.Invoke(this, threshold);
+
 				}
 
 				return min;
 			}
 
 			var threshold = heuristic(startPoint, destinationPoint);
-            while (threshold != zero) {
-				threshold = search(startPoint, zero, threshold);
+            while (threshold != 0) {
+				var newThreshold = search(startPoint, 0, threshold);
+				AlgorithmStep?.Invoke(this, threshold);
+				if (newThreshold == 0) {
+					threshold = 0;
+				}
+                else {
+					threshold++;
+				}
 			}
 		}
     }

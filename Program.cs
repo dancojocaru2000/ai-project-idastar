@@ -14,15 +14,15 @@ var algoBoard = new IdaStar.WorkingBoard(labyrinthIN.Select((row) => row.ToList(
 int step = 0;
 bool done = false;
 ConsoleColor border = ConsoleColor.Magenta;
-algoBoard.AlgorithmStep += (_) => {
+algoBoard.AlgorithmStep += (_, threshold) => {
     Console.Clear();
     step++;
     if(done){
         System.Console.WriteLine("The solved labyrinth is:");
     }else if(step%2 == 0) {
-        System.Console.WriteLine("Computing [· ]");
+        System.Console.WriteLine($"Computing (threshold: {threshold}) [· ]");
     }else {
-        System.Console.WriteLine("Computing [ ·]");
+        System.Console.WriteLine($"Computing (threshold: {threshold}) [ ·]");
     }
 
     //top border
@@ -62,6 +62,7 @@ algoBoard.AlgorithmStep += (_) => {
     Console.ResetColor();
     Console.WriteLine();
 	Thread.Sleep(200);
+	// Console.ReadLine();
 };
 
 algoBoard.RunIdaStar();
