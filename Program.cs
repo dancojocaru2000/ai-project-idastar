@@ -1,4 +1,4 @@
-﻿using IdaStar;
+using IdaStar;
 
 string[] labyrinthIN = System.IO.File.ReadAllLines(@"./labyrinth.txt");
 
@@ -94,7 +94,7 @@ void FormattedLabRow(string line) {
                 break;
             }
 
-            case 'p': {
+            case 'P': {
                 Console.BackgroundColor = ConsoleColor.Blue;
                 Console.Write(" · "); 
                 break;
