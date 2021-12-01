@@ -152,7 +152,7 @@ namespace IdaStar
             Point findPoint(CellState neededState) {
                 for (var i = 0; i < _board.Count; i++) {
                     for (var j = 0; j < _board[i].Count; j++) {
-                        if (_board[i][j] == CellState.START) {
+                        if (_board[i][j] == neededState) {
                             return new(i, j);
                         }
                     }
@@ -205,7 +205,7 @@ namespace IdaStar
 			}
 
 			var threshold = heuristic(startPoint, destinationPoint);
-            while (threshold == zero) {
+            while (threshold != zero) {
 				threshold = search(startPoint, zero, threshold);
 			}
 		}
