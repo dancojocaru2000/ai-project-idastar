@@ -1,4 +1,9 @@
+using System.Runtime.Versioning;
+
 using System.Collections.ObjectModel;
+using System.Collections;
+
+[assembly: RequiresPreviewFeatures()]
 
 namespace IdaStar
 {
@@ -45,6 +50,56 @@ namespace IdaStar
         public int ManhattanDistance(Point otherPoint) {
 			return Math.Abs(Row - otherPoint.Row) + Math.Abs(Column - otherPoint.Column);
 		}
+
+        [Flags]
+        public enum NDirections : byte {
+            N  = 0b0000_0001,
+            E  = 0b0000_0010,
+            S  = 0b0000_0100,
+            W  = 0b0000_1000,
+            NE = 0b0001_0000,
+            SE = 0b0010_0000,
+            SW = 0b0100_0000,
+            NW = 0b1000_0000,
+        }
+
+        public List<Point> GetNeighbours(byte directions = 0b1111) {
+			List<Point> result = new();
+
+            if ((directions & ((byte)NDirections.N)) > 0) {
+				result.Add(new(Row - 1, Column));
+			}
+            if ((directions & ((byte)NDirections.E)) > 0) {
+				result.Add(new(Row, Column + 1));
+			}
+            if ((directions & ((byte)NDirections.S)) > 0) {
+				result.Add(new(Row + 1, Column));
+			}
+            if ((directions & ((byte)NDirections.W)) > 0) {
+				result.Add(new(Row, Column - 1));
+			}
+            if ((directions & ((byte)NDirections.NE)) > 0) {
+				result.Add(new(Row - 1, Column + 1));
+			}
+            if ((directions & ((byte)NDirections.SE)) > 0) {
+				result.Add(new(Row + 1, Column + 1));
+			}
+            if ((directions & ((byte)NDirections.SW)) > 0) {
+				result.Add(new(Row + 1, Column - 1));
+			}
+            if ((directions & ((byte)NDirections.NW)) > 0) {
+				result.Add(new(Row - 1, Column - 1));
+			}
+
+			return result;
+		}
+
+		public bool IsInsideBox(int Height, int Width) => IsInsideBox(new(Height - 1, Width - 1));
+		public bool IsInsideBox(Point bottomRight) => IsInsideBox(new(0, 0), bottomRight);
+		public bool IsInsideBox(Point topLeft, Point bottomRight) {
+			return topLeft.Row <= Row && topLeft.Column <= Column &&
+				Row <= bottomRight.Row && Column <= bottomRight.Column;
+		}
     }
 
 	public class WorkingBoard {
@@ -87,7 +142,7 @@ namespace IdaStar
         }
 
 		public void RunIdaStar() => RunIdaStar(0, 1, (p1, p2) => p1.ManhattanDistance(p2));
-		public void RunIdaStar<Comp>(Comp zero, Comp increment, Func<Point, Point, Comp> heuristic) where Comp: IComparable<Comp> {
+		public void RunIdaStar<Num>(Num zero, Num increment, Func<Point, Point, Num> heuristic) where Num: INumber<Num> {
 			// Don't run algorithm on a "dirty" board
 			// "dirty" = the algorithm was already ran before
 			if (_board.Select((row) => row.Where((state) => state == CellState.PATH).Count()).Any((cnt) => cnt > 0)) {
@@ -109,12 +164,35 @@ namespace IdaStar
 
 			Point destinationPoint = findPoint(CellState.DESTINATION);
 
-            Comp search(Point current, Comp cost, Comp threshold) {
-				throw new NotImplementedException();
+            Num search(Point current, Num cost, Num threshold) {
+				var h = heuristic(current, destinationPoint);
+                if (h == zero) {
+					return h;
+				}
+				var f = cost + h;
+                if (f > threshold) {
+					return f;
+				}
+				var min = f;
+
+                foreach(var neighbour in current.GetNeighbours()) {
+					if (!neighbour.IsInsideBox(_board.Count, _board[0].Count)) {
+						continue;
+					}
+					var neighbourF = search(neighbour, cost + increment, threshold);
+                    if (neighbourF < min) {
+						min = neighbourF;
+					}
+                    if (min == zero) {
+						break;
+					}
+				}
+
+				return min;
 			}
 
 			var threshold = heuristic(startPoint, destinationPoint);
-            while (threshold.CompareTo(zero) == 0) {
+            while (threshold == zero) {
 				threshold = search(startPoint, zero, threshold);
 			}
 		}
