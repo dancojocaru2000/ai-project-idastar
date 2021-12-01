@@ -1,6 +1,6 @@
 ﻿using IdaStar;
 
-string[] labyrinthIN = System.IO.File.ReadAllLines(@"C:\UNI\AI\IDAstar\labyrinth.txt");
+string[] labyrinthIN = System.IO.File.ReadAllLines(@"./labyrinth.txt");
 
 
 System.Console.WriteLine("The input labyrinth: ");
