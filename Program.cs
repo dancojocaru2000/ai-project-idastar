@@ -20,9 +20,9 @@ algoBoard.AlgorithmStep += (_, threshold) => {
     if(done){
         System.Console.WriteLine("The solved labyrinth is:");
     }else if(step%2 == 0) {
-        System.Console.WriteLine($"Computing (threshold: {threshold}) [· ]");
+        System.Console.WriteLine($"Computing (threshold: {threshold}) [• ]");
     }else {
-        System.Console.WriteLine($"Computing (threshold: {threshold}) [ ·]");
+        System.Console.WriteLine($"Computing (threshold: {threshold}) [ •]");
     }
 
     //top border
@@ -86,7 +86,7 @@ void FormattedLabRow(string line) {
 
             case 'S': {
                 Console.BackgroundColor = ConsoleColor.Green;
-                Console.Write("<·>"); 
+                Console.Write("<•>"); 
                 break;
             }
 
@@ -98,7 +98,7 @@ void FormattedLabRow(string line) {
 
             case 'P': {
                 Console.BackgroundColor = ConsoleColor.Blue;
-                Console.Write(" · "); 
+                Console.Write(" • "); 
                 break;
             }
 
