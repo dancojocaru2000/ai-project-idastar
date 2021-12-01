@@ -27,7 +27,7 @@ algoBoard.AlgorithmStep += (_, threshold) => {
 
     //top border
     Console.BackgroundColor = border;
-    for (var i=0; i<algoBoard.Board[0].Count()+2; i++){
+    for (var i=0; i< algoBoard.Board[0].Count + 2; i++){
         Console.Write("   "); 
     }
     Console.ResetColor();
@@ -56,7 +56,7 @@ algoBoard.AlgorithmStep += (_, threshold) => {
 
     //bottom border
     Console.BackgroundColor = border;
-    for (var i=0; i<algoBoard.Board[0].Count()+2; i++){
+    for (var i=0; i< algoBoard.Board[0].Count + 2; i++){
         Console.Write("   "); 
     }
     Console.ResetColor();
@@ -67,8 +67,7 @@ algoBoard.AlgorithmStep += (_, threshold) => {
 
 algoBoard.RunIdaStar();
 
-
-void FormattedLabRow(string line) {
+static void FormattedLabRow(string line) {
     char[] characters = line.ToCharArray();
     foreach (char c in characters) {
         switch ( c ) {
