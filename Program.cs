@@ -7,6 +7,7 @@ System.Console.WriteLine("The input labyrinth: ");
 foreach (string line in labyrinthIN)
 {
     FormattedLabRow(line);
+    Console.WriteLine();
 }
 
 var algoBoard = new IdaStar.WorkingBoard(labyrinthIN.Select((row) => row.ToList()).ToList());
