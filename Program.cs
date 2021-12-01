@@ -19,7 +19,7 @@ algoBoard.AlgorithmStep += (_) => {
     step++;
     if(done){
         System.Console.WriteLine("The solved labyrinth is:");
-    }else if(step/2 == 0) {
+    }else if(step%2 == 0) {
         System.Console.WriteLine("Computing [· ]");
     }else {
         System.Console.WriteLine("Computing [ ·]");
