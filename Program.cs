@@ -1,6 +1,7 @@
 ﻿using IdaStar;
 
 string[] labyrinthIN = File.ReadAllLines(@"./labyrinth.txt");
+string[] labyrinth = FormatLabyrinth(labyrinthIN);
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -11,7 +12,14 @@ foreach (string line in labyrinthIN)
     Console.WriteLine();
 }
 
-var algoBoard = new IdaStar.WorkingBoard(labyrinthIN.Select((row) => row.ToList()).ToList());
+Console.WriteLine("The formatted labyrinth: ");
+foreach (string line in labyrinth)
+{
+    FormattedLabRow(line);
+    Console.WriteLine();
+}
+
+var algoBoard = new IdaStar.WorkingBoard(labyrinth.Select((row) => row.ToList()).ToList());
 int step = 0;
 ConsoleColor border = ConsoleColor.Magenta;
 bool printSteps = false;
@@ -71,6 +79,34 @@ static void FormattedLabRow(string line) {
     Console.ResetColor();
 }
 
+string[] FormatLabyrinth(string[] labIN) {
+    var maxW = 0;
+    List<string> lab = new List<string>();
+    foreach (string line in labIN)
+    {
+        if(maxW < line.Length) {
+            maxW = line.Length;
+        }
+    }
+
+    foreach (string line in labIN)
+    {
+        if(maxW > line.Length) {
+            var dif = maxW - line.Length;
+            string fLine = line;
+            while (dif > 0) {
+                fLine = fLine+ "#";
+                dif--;
+            }
+            lab.Add(fLine);
+        }else {
+            lab.Add(line);
+        }
+    }
+
+    string[] FormattedLabyrinth = lab.ToArray();
+    return FormattedLabyrinth;
+}
 
 void PrintBoard(int threshold, bool done){
     Console.Clear();
