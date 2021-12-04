@@ -37,7 +37,7 @@ if(printSteps) {
 }
 
 algoBoard.RunIdaStar();
-PrintBoard(0, true);
+PrintBoard(0, true, clearScreen: printSteps);
 
 static void FormattedLabRow(string line) {
     char[] characters = line.ToCharArray();
@@ -108,8 +108,8 @@ string[] FormatLabyrinth(string[] labIN) {
     return FormattedLabyrinth;
 }
 
-void PrintBoard(int threshold, bool done){
-    Console.Clear();
+void PrintBoard(int threshold, bool done, bool clearScreen = true){
+    if (clearScreen) Console.Clear();
     step++;
     if(done){
         Console.WriteLine("The solved labyrinth is:");
