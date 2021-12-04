@@ -1,28 +1,122 @@
 ﻿using IdaStar;
 
-string[] labyrinthIN = System.IO.File.ReadAllLines(@"./labyrinth.txt");
+string[] labyrinthIN = File.ReadAllLines(@"./labyrinth.txt");
+string[] labyrinth = FormatLabyrinth(labyrinthIN);
 
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-System.Console.WriteLine("The input labyrinth: ");
+Console.WriteLine("The input labyrinth: ");
 foreach (string line in labyrinthIN)
 {
     FormattedLabRow(line);
     Console.WriteLine();
 }
 
-var algoBoard = new IdaStar.WorkingBoard(labyrinthIN.Select((row) => row.ToList()).ToList());
+Console.WriteLine("The formatted labyrinth: ");
+foreach (string line in labyrinth)
+{
+    FormattedLabRow(line);
+    Console.WriteLine();
+}
+
+var algoBoard = new IdaStar.WorkingBoard(labyrinth.Select((row) => row.ToList()).ToList());
 int step = 0;
-bool done = false;
 ConsoleColor border = ConsoleColor.Magenta;
-algoBoard.AlgorithmStep += (_, threshold) => {
+bool printSteps = false;
+
+Console.WriteLine();
+Console.WriteLine("Show each step? (Y/N) ");
+if(Console.ReadLine()?.Trim() == "Y") {
+    printSteps = true;
+}
+
+if(printSteps) {
+    algoBoard.AlgorithmStep += (_, threshold) => {
+        PrintBoard(threshold, false);
+    };
+}
+
+algoBoard.RunIdaStar();
+PrintBoard(0, true);
+
+static void FormattedLabRow(string line) {
+    char[] characters = line.ToCharArray();
+    foreach (char c in characters) {
+        switch ( c ) {
+            case '#': {
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.Write("   "); 
+                break;
+            }
+
+            case ' ': {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.Write("   "); 
+                break;
+            }
+
+            case 'S': {
+                Console.BackgroundColor = ConsoleColor.Green;
+                Console.Write("<•>"); 
+                break;
+            }
+
+            case 'F': {
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.Write("[ ]"); 
+                break;
+            }
+
+            case 'P': {
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.Write(" • "); 
+                break;
+            }
+
+            default: break;
+        }
+    }
+    Console.ResetColor();
+}
+
+string[] FormatLabyrinth(string[] labIN) {
+    var maxW = 0;
+    List<string> lab = new List<string>();
+    foreach (string line in labIN)
+    {
+        if(maxW < line.Length) {
+            maxW = line.Length;
+        }
+    }
+
+    foreach (string line in labIN)
+    {
+        if(maxW > line.Length) {
+            var dif = maxW - line.Length;
+            string fLine = line;
+            while (dif > 0) {
+                fLine = fLine+ "#";
+                dif--;
+            }
+            lab.Add(fLine);
+        }else {
+            lab.Add(line);
+        }
+    }
+
+    string[] FormattedLabyrinth = lab.ToArray();
+    return FormattedLabyrinth;
+}
+
+void PrintBoard(int threshold, bool done){
     Console.Clear();
     step++;
     if(done){
-        System.Console.WriteLine("The solved labyrinth is:");
+        Console.WriteLine("The solved labyrinth is:");
     }else if(step%2 == 0) {
-        System.Console.WriteLine($"Computing (threshold: {threshold}) [• ]");
+        Console.WriteLine($"Computing (threshold: {threshold}) [• ]");
     }else {
-        System.Console.WriteLine($"Computing (threshold: {threshold}) [ •]");
+        Console.WriteLine($"Computing (threshold: {threshold}) [ •]");
     }
 
     //top border
@@ -63,46 +157,4 @@ algoBoard.AlgorithmStep += (_, threshold) => {
     Console.WriteLine();
 	Thread.Sleep(200);
 	// Console.ReadLine();
-};
-
-algoBoard.RunIdaStar();
-
-static void FormattedLabRow(string line) {
-    char[] characters = line.ToCharArray();
-    foreach (char c in characters) {
-        switch ( c ) {
-            case '#': {
-                Console.BackgroundColor = ConsoleColor.White;
-                Console.Write("   "); 
-                break;
-            }
-
-            case ' ': {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.Write("   "); 
-                break;
-            }
-
-            case 'S': {
-                Console.BackgroundColor = ConsoleColor.Green;
-                Console.Write("<•>"); 
-                break;
-            }
-
-            case 'F': {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.Write("[ ]"); 
-                break;
-            }
-
-            case 'P': {
-                Console.BackgroundColor = ConsoleColor.Blue;
-                Console.Write(" • "); 
-                break;
-            }
-
-            default: break;
-        }
-    }
-    Console.ResetColor();
 }
