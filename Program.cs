@@ -49,6 +49,7 @@ static void FormattedLabRow(string line) {
                 break;
             }
 
+            case '.':
             case ' ': {
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.Write("   "); 
