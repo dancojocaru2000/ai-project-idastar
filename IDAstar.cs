@@ -20,6 +20,7 @@ namespace IdaStar
         public static CellState FromInput(this char c) => c switch
         {
             '#' => CellState.OBSTACLE,
+            '.' => CellState.EMPTY,
             ' ' => CellState.EMPTY,
             'S' => CellState.START,
             'F' => CellState.DESTINATION,
@@ -29,7 +30,7 @@ namespace IdaStar
 
 		public static char ToInput(this CellState state) => state switch
 		{
-			CellState.EMPTY => ' ',
+			CellState.EMPTY => '.',
 			CellState.OBSTACLE => '#',
 			CellState.START => 'S',
 			CellState.DESTINATION => 'F',
