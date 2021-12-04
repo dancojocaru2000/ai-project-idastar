@@ -26,7 +26,7 @@ bool printSteps = false;
 
 Console.WriteLine();
 Console.WriteLine("Show each step? (Y/N) ");
-if(Console.ReadLine()?.Trim() == "Y") {
+if(Console.ReadLine()?.Trim().ToUpperInvariant() == "Y") {
     printSteps = true;
 }
 
