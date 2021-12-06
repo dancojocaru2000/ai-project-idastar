@@ -39,6 +39,10 @@ if(printSteps) {
 algoBoard.RunIdaStar();
 PrintBoard(0, true, clearScreen: printSteps);
 
+if (args.Contains("-w") || args.Contains("--wait")) {
+	Console.ReadKey();
+}
+
 static void FormattedLabRow(string line) {
     char[] characters = line.ToCharArray();
     foreach (char c in characters) {
