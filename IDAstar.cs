@@ -204,7 +204,6 @@ namespace IdaStar
 					if (_board[neighbour.Row][neighbour.Column] == CellState.PATH) {
 						_board[neighbour.Row][neighbour.Column] = CellState.EMPTY;
 					}
-					AlgorithmStep?.Invoke(this, threshold);
 
 				}
 
