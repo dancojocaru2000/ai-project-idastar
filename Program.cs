@@ -157,5 +157,4 @@ void PrintBoard(int threshold, bool done, bool clearScreen = true){
     Console.ResetColor();
     Console.WriteLine();
 	Thread.Sleep(200);
-	// Console.ReadLine();
 }
