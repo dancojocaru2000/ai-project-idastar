@@ -61,9 +61,13 @@ namespace IdaStar
             SE = 0b0010_0000,
             SW = 0b0100_0000,
             NW = 0b1000_0000,
+
+			N_E_S_W = 0b0000_1111,
+			ALL = 0b1111_1111,
         }
 
-        public List<Point> GetNeighbours(byte directions = 0b1111) {
+		public List<Point> GetNeighbours(NDirections directions = NDirections.N_E_S_W) => GetNeighbours((byte)directions);
+		public List<Point> GetNeighbours(byte directions) {
 			List<Point> result = new();
 
             if ((directions & ((byte)NDirections.N)) > 0) {
