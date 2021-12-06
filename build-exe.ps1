@@ -1,11 +1,22 @@
 #! /usr/bin/env pwsh
 
+$platform = [System.Environment]::OSVersion.platform
+if ($platform -eq 4) {
+	$default = 1
+}
+elseif ($platform -le 2) {
+	$default = 0
+}
+else {
+	$default = -1
+}
+
 $options = @("&Windows", "&Linux")
 $choice = $host.UI.PromptForChoice(
 	"Compile exe", 
 	"What OS to compile the executable for?",
 	$options,
-	-1
+	$default
 )
 
 $platform = $null
