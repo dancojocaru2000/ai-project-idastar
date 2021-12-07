@@ -177,7 +177,7 @@ namespace IdaStar
                 if (f > threshold) {
 					return f;
 				}
-				var min = f;
+				var min = int.MaxValue;
 
                 foreach(var neighbour in current.GetNeighbours()) {
 					if (!neighbour.IsInsideBox(_board.Count, _board[0].Count)) {
@@ -218,7 +218,7 @@ namespace IdaStar
 					threshold = 0;
 				}
                 else {
-					threshold++;
+					threshold = newThreshold;
 				}
 			}
 		}
