@@ -5,23 +5,13 @@ string[] labyrinth = FormatLabyrinth(labyrinthIN);
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-Console.WriteLine("The input labyrinth: ");
-foreach (string line in labyrinthIN)
-{
-    FormattedLabRow(line);
-    Console.WriteLine();
-}
-
-Console.WriteLine("The formatted labyrinth: ");
-foreach (string line in labyrinth)
-{
-    FormattedLabRow(line);
-    Console.WriteLine();
-}
-
 var algoBoard = new IdaStar.WorkingBoard(labyrinth.Select((row) => row.ToList()).ToList());
 int step = 0;
 ConsoleColor border = ConsoleColor.Magenta;
+
+Console.WriteLine("The input labyrinth: ");
+PrintBoard(0, true, false);
+
 bool printSteps = false;
 
 Console.WriteLine();
@@ -37,7 +27,10 @@ if(printSteps) {
 }
 
 algoBoard.RunIdaStar();
-PrintBoard(0, true, clearScreen: printSteps);
+if(printSteps) Console.Clear();
+Console.WriteLine("The solved labyrinth is:");
+PrintBoard(0, true, clearScreen: false);
+
 
 if (args.Contains("-w") || args.Contains("--wait")) {
 	Console.ReadKey();
@@ -53,8 +46,7 @@ static void FormattedLabRow(string line) {
                 break;
             }
 
-            case '.':
-            case ' ': {
+            case '.': {
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.Write("   "); 
                 break;
@@ -74,6 +66,12 @@ static void FormattedLabRow(string line) {
 
             case 'P': {
                 Console.BackgroundColor = ConsoleColor.Blue;
+                Console.Write(" • "); 
+                break;
+            }
+
+            case 'G': {
+                Console.BackgroundColor = ConsoleColor.Green;
                 Console.Write(" • "); 
                 break;
             }
@@ -117,7 +115,7 @@ void PrintBoard(int threshold, bool done, bool clearScreen = true){
     if (clearScreen) Console.Clear();
     step++;
     if(done){
-        Console.WriteLine("The solved labyrinth is:");
+        
     }else if(step%2 == 0) {
         Console.WriteLine($"Computing (threshold: {threshold}) [• ]");
     }else {
