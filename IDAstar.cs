@@ -184,7 +184,8 @@ namespace IdaStar
 						continue;
 					}
                     if (_board[neighbour.Row][neighbour.Column] == CellState.OBSTACLE ||
-						_board[neighbour.Row][neighbour.Column] == CellState.PATH) {
+						_board[neighbour.Row][neighbour.Column] == CellState.PATH ||
+						_board[neighbour.Row][neighbour.Column] == CellState.START) {
 						continue;
 					}
 
@@ -213,7 +214,6 @@ namespace IdaStar
 			var threshold = heuristic(startPoint, destinationPoint);
             while (threshold != 0) {
 				var newThreshold = search(startPoint, 0, threshold);
-				AlgorithmStep?.Invoke(this, threshold);
 				if (newThreshold == 0) {
 					threshold = 0;
 				}
