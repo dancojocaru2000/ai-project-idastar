@@ -13,6 +13,7 @@ namespace IdaStar
         START,
         DESTINATION,
         PATH,
+		GOOD_PATH,
     }
 
     public static class CellStateUtil {
@@ -24,6 +25,7 @@ namespace IdaStar
             'S' => CellState.START,
             'F' => CellState.DESTINATION,
             'P' => CellState.PATH,
+			'G' => CellState.GOOD_PATH,
             _ => throw new NotImplementedException(),
         };
 
@@ -34,6 +36,7 @@ namespace IdaStar
 			CellState.START => 'S',
 			CellState.DESTINATION => 'F',
             CellState.PATH => 'P',
+			CellState.GOOD_PATH => 'G',
 			_ => throw new NotImplementedException(),
 		};
 
@@ -199,12 +202,15 @@ namespace IdaStar
 						min = neighbourF;
 					}
                     if (min == 0) {
+						// if (_board[current.Row][current.Column] == CellState.PATH) {
+						// 	_board[current.Row][current.Column] = CellState.GOOD_PATH;
+						// }
 						break;
 					}
 
-					if (_board[neighbour.Row][neighbour.Column] == CellState.PATH) {
-						_board[neighbour.Row][neighbour.Column] = CellState.EMPTY;
-					}
+					// if (_board[neighbour.Row][neighbour.Column] == CellState.PATH) {
+					// 	_board[neighbour.Row][neighbour.Column] = CellState.EMPTY;
+					// }
 
 				}
 
@@ -213,6 +219,7 @@ namespace IdaStar
 
 			var threshold = heuristic(startPoint, destinationPoint);
             while (threshold != 0) {
+				Reset();
 				var newThreshold = search(startPoint, 0, threshold);
 				if (newThreshold == 0) {
 					threshold = 0;
